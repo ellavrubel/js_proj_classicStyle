@@ -1,17 +1,11 @@
-
+import checkNumInputs from './checkNumInputs';
 
 const forms = () => {
 
     const form = document.querySelectorAll('form');
     const inputs = document.querySelectorAll('input');
-    const phoneInputs = document.querySelectorAll('input[name = "user_name"]');
 
-    phoneInputs.forEach(item => {
-        item.addEventListener('input', () => {  // event 'input' срабатывает когда пользователь что-то вводит/пишет
-            item.value = item.value.replace(/\D/, '');  // /\D/ - все, что не является числом будет заменено пустым местом
-        })
-
-    });
+    checkNumInputs('input[name = "user_name"]');   // валидация на ввод только чисел
 
     const message = {
         loading: 'Загрузка...',
@@ -63,7 +57,7 @@ const forms = () => {
                     clearInputs();
                     setTimeout(() => {
                         statusMessage.remove();
-                    }, 5000);
+                    }, 10000);
                 })
         })
     });
