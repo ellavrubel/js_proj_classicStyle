@@ -18021,11 +18021,11 @@ var modals = function modals() {
         if (e.target) {
           e.preventDefault();
         } // закрытие всех открытых модальных окон на странице
+        // openWindows.forEach(item => {
+        //     item.style.display = 'none';
+        // });
 
 
-        openWindows.forEach(function (item) {
-          item.style.display = 'none';
-        });
         modal.style.display = 'block';
         document.body.style.overflow = 'hidden'; // при открытом модальном окне страница сайта будет замораживаться
         // document.body.classList.add('modal-open'); // т.к. в проекте есть Bootstrap

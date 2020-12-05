@@ -20,9 +20,9 @@ const modals = () => {
                     e.preventDefault();
                 }
                 // закрытие всех открытых модальных окон на странице
-                openWindows.forEach(item => {
-                    item.style.display = 'none';
-                });
+                // openWindows.forEach(item => {
+                //     item.style.display = 'none';
+                // });
 
                 modal.style.display = 'block';
                 document.body.style.overflow = 'hidden'; // при открытом модальном окне страница сайта будет замораживаться
