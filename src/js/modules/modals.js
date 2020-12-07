@@ -9,7 +9,7 @@ const modals = () => {
         const trigger = document.querySelectorAll(triggerSelector);
         const modal = document.querySelector(modalSelector);
         const close = document.querySelector(closeSelector);
-        const openWindows = document.querySelector('[data-modal]');
+        const openWindows = document.querySelectorAll('[data-modal]');
 
 
 
@@ -19,10 +19,11 @@ const modals = () => {
                 if (e.target){
                     e.preventDefault();
                 }
+
                 // закрытие всех открытых модальных окон на странице
-                // openWindows.forEach(item => {
-                //     item.style.display = 'none';
-                // });
+                openWindows.forEach(item => {
+                    item.style.display = 'none';
+                });
 
                 modal.style.display = 'block';
                 document.body.style.overflow = 'hidden'; // при открытом модальном окне страница сайта будет замораживаться
@@ -47,6 +48,7 @@ const modals = () => {
         modal.addEventListener('click', (e) => {
 
             if (e.target === modal && closeClickOverlay){
+
                 // закрытие всех открытых модальных окон на странице
                 openWindows.forEach(item => {
                     item.style.display = 'none';

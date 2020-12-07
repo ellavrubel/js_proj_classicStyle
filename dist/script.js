@@ -18013,7 +18013,7 @@ var modals = function modals() {
     var trigger = document.querySelectorAll(triggerSelector);
     var modal = document.querySelector(modalSelector);
     var close = document.querySelector(closeSelector);
-    var openWindows = document.querySelector('[data-modal]');
+    var openWindows = document.querySelectorAll('[data-modal]');
     trigger.forEach(function (item) {
       // forEach возможен только при querySelectorAll и на каждый элемент массива с одинаковыми классами будет навешан обработ событий
       item.addEventListener('click', function (e) {
@@ -18021,11 +18021,11 @@ var modals = function modals() {
         if (e.target) {
           e.preventDefault();
         } // закрытие всех открытых модальных окон на странице
-        // openWindows.forEach(item => {
-        //     item.style.display = 'none';
-        // });
 
 
+        openWindows.forEach(function (item) {
+          item.style.display = 'none';
+        });
         modal.style.display = 'block';
         document.body.style.overflow = 'hidden'; // при открытом модальном окне страница сайта будет замораживаться
         // document.body.classList.add('modal-open'); // т.к. в проекте есть Bootstrap
