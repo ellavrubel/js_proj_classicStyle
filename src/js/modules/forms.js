@@ -1,11 +1,11 @@
 import checkNumInputs from './checkNumInputs';
 
-const forms = () => {
+const forms = (state) => {
 
     const form = document.querySelectorAll('form');
     const inputs = document.querySelectorAll('input');
 
-    checkNumInputs('input[name = "user_name"]');   // валидация на ввод только чисел
+    checkNumInputs('input[name = "user_phone"]');   // валидация на ввод только чисел
 
     const message = {
         loading: 'Загрузка...',
@@ -45,7 +45,12 @@ const forms = () => {
             statusMessage.classList.add('status');
             item.appendChild(statusMessage);
 
-            const formData = new FormData (item);
+            const formData = new FormData (item);  // коснструктор для сбора данных, кот есть в форме
+            if (item.getAttribute('data-calc') === 'end') {
+                for (let key in state){
+                    formData.append(key, state[key]);
+                }
+            }
 
             postData('assets/server.php', formData)
                 .then(res => {
@@ -57,7 +62,7 @@ const forms = () => {
                     clearInputs();
                     setTimeout(() => {
                         statusMessage.remove();
-                    }, 10000);
+                    }, 5000);
                 })
         })
     });

@@ -17817,7 +17817,7 @@ window.addEventListener('DOMContentLoaded', function () {
   Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_3__["default"])('.glazing_slider', '.glazing_block', '.glazing_content', 'active');
   Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_3__["default"])('.decoration_slider', '.no_click', '.decoration_content > div > div', 'after_click');
   Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_3__["default"])('.balcon_icons', '.balcon_icons_img', '.big_img > img', 'do_image_more', 'inline-block');
-  Object(_modules_forms__WEBPACK_IMPORTED_MODULE_4__["default"])();
+  Object(_modules_forms__WEBPACK_IMPORTED_MODULE_4__["default"])(modalState);
 });
 
 /***/ }),
@@ -17831,25 +17831,59 @@ window.addEventListener('DOMContentLoaded', function () {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _checkNumInputs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./checkNumInputs */ "./src/js/modules/checkNumInputs.js");
+/* harmony import */ var core_js_modules_web_dom_collections_for_each__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/web.dom-collections.for-each */ "./node_modules/core-js/modules/web.dom-collections.for-each.js");
+/* harmony import */ var core_js_modules_web_dom_collections_for_each__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_collections_for_each__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _checkNumInputs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./checkNumInputs */ "./src/js/modules/checkNumInputs.js");
+
 
 
 var changeModalState = function changeModalState(state) {
   var windowForm = document.querySelectorAll('.balcon_icons_img');
-  var windowWidth = document.querySelector('#width');
-  var windowHeight = document.querySelector('#height');
-  var windowType = document.querySelector('#view_type');
+  var windowWidth = document.querySelectorAll('#width'); // псевдомассив, даже если один элемент, то будет применяться метод forEach
+
+  var windowHeight = document.querySelectorAll('#height');
+  var windowType = document.querySelectorAll('#view_type');
   var windowProfile = document.querySelectorAll('.checkbox');
-  Object(_checkNumInputs__WEBPACK_IMPORTED_MODULE_0__["default"])('#width');
-  Object(_checkNumInputs__WEBPACK_IMPORTED_MODULE_0__["default"])('#height'); // function bindActionToElem (event, elem, prop){
-  //     elem.forEach((item, i) => {
-  //
-  //         item.addEventListener(event, () => {
-  //             state[] = i;
-  //         })
-  //
-  //     });
-  // }
+  Object(_checkNumInputs__WEBPACK_IMPORTED_MODULE_1__["default"])('#width');
+  Object(_checkNumInputs__WEBPACK_IMPORTED_MODULE_1__["default"])('#height');
+
+  function bindActionToElems(event, elem, prop) {
+    elem.forEach(function (item, i) {
+      item.addEventListener(event, function () {
+        switch (item.nodeName) {
+          case 'SPAN':
+            // свойство nodeName возвращает название узла в верхнем регистре
+            state[prop] = i;
+            break;
+
+          case 'INPUT':
+            if (item.getAttribute('type') === 'checkbox') {
+              i === 0 ? state[prop] = 'холодное' : state[prop] = 'теплое';
+              elem.forEach(function (box, j) {
+                // оставляем галочку только на выбранном checkbox
+                box.checked = i === j;
+              });
+            } else {
+              state[prop] = item.value;
+            }
+
+            break;
+
+          case 'SELECT':
+            state[prop] = item.value;
+            break;
+        }
+
+        console.log(state);
+      });
+    });
+  }
+
+  bindActionToElems('click', windowForm, 'form');
+  bindActionToElems('input', windowWidth, 'width');
+  bindActionToElems('input', windowHeight, 'height');
+  bindActionToElems('change', windowType, 'type');
+  bindActionToElems('change', windowProfile, 'profile');
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (changeModalState);
@@ -17913,10 +17947,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var forms = function forms() {
+var forms = function forms(state) {
   var form = document.querySelectorAll('form');
   var inputs = document.querySelectorAll('input');
-  Object(_checkNumInputs__WEBPACK_IMPORTED_MODULE_5__["default"])('input[name = "user_name"]'); // валидация на ввод только чисел
+  Object(_checkNumInputs__WEBPACK_IMPORTED_MODULE_5__["default"])('input[name = "user_phone"]'); // валидация на ввод только чисел
 
   var message = {
     loading: 'Загрузка...',
@@ -17971,7 +18005,14 @@ var forms = function forms() {
       var statusMessage = document.createElement('div');
       statusMessage.classList.add('status');
       item.appendChild(statusMessage);
-      var formData = new FormData(item);
+      var formData = new FormData(item); // коснструктор для сбора данных, кот есть в форме
+
+      if (item.getAttribute('data-calc') === 'end') {
+        for (var key in state) {
+          formData.append(key, state[key]);
+        }
+      }
+
       postData('assets/server.php', formData).then(function (res) {
         console.log(res);
         statusMessage.textContent = statusMessage.success;
@@ -17981,7 +18022,7 @@ var forms = function forms() {
         clearInputs();
         setTimeout(function () {
           statusMessage.remove();
-        }, 10000);
+        }, 5000);
       });
     });
   });
