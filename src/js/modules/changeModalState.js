@@ -14,13 +14,14 @@ const changeModalState = (state) => {
 
 
     function bindActionToElems (event, elem, prop){
+
         elem.forEach((item, i) => {
 
             item.addEventListener(event, () => {
                switch (item.nodeName) {
                    case 'SPAN':   // свойство nodeName возвращает название узла в верхнем регистре
-                       state[prop] = i;
-                       break;
+                           state[prop] = i;
+                           break;
 
                    case 'INPUT':
                        if(item.getAttribute('type') === 'checkbox'){

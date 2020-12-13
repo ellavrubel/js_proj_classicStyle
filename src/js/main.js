@@ -7,6 +7,7 @@ import changeModalState from './modules/changeModalState';
 
 
 
+
 window.addEventListener('DOMContentLoaded', () => {   // скрипты выполняются только после загрузки всей страницы сайта
 
     'use strict';
