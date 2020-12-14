@@ -17800,6 +17800,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_tabs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/tabs */ "./src/js/modules/tabs.js");
 /* harmony import */ var _modules_forms__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/forms */ "./src/js/modules/forms.js");
 /* harmony import */ var _modules_changeModalState__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/changeModalState */ "./src/js/modules/changeModalState.js");
+/* harmony import */ var _modules_timer__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/timer */ "./src/js/modules/timer.js");
+
 
 
 
@@ -17810,7 +17812,8 @@ window.addEventListener('DOMContentLoaded', function () {
   // скрипты выполняются только после загрузки всей страницы сайта
   'use strict'; // создание объекта, в кот помещаются все данные из калькулятора
 
-  var modalState = {}; // вызов импортируемых функций
+  var modalState = {};
+  var deadline = '2021-1-4'; // вызов импортируемых функций
 
   Object(_modules_changeModalState__WEBPACK_IMPORTED_MODULE_5__["default"])(modalState);
   Object(_modules_modals__WEBPACK_IMPORTED_MODULE_2__["default"])();
@@ -17818,6 +17821,7 @@ window.addEventListener('DOMContentLoaded', function () {
   Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_3__["default"])('.decoration_slider', '.no_click', '.decoration_content > div > div', 'after_click');
   Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_3__["default"])('.balcon_icons', '.balcon_icons_img', '.big_img > img', 'do_image_more', 'inline-block');
   Object(_modules_forms__WEBPACK_IMPORTED_MODULE_4__["default"])(modalState);
+  Object(_modules_timer__WEBPACK_IMPORTED_MODULE_6__["default"])('#timer', deadline);
 });
 
 /***/ }),
@@ -18167,6 +18171,80 @@ var tabs = function tabs(headSelector, tabSelector, contentSelector, activeClass
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (tabs);
+
+/***/ }),
+
+/***/ "./src/js/modules/timer.js":
+/*!*********************************!*\
+  !*** ./src/js/modules/timer.js ***!
+  \*********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+var timer = function timer(id, deadline) {
+  //    для двучислового отображение на странице
+  var addZero = function addZero(num) {
+    if (num <= 9) {
+      return '0' + num;
+    } else {
+      return num;
+    }
+  }; // получаем разницу между окончанием и настоящей датой  - то, что нужно вставить на страницу
+
+
+  var getTimeRemaining = function getTimeRemaining(endTime) {
+    // по факту это deadline
+    var t = Date.parse(endTime) - Date.parse(new Date()); // количество милисекунд - то, что нужно отобразить на странице
+
+    var seconds = Math.floor(t / 1000 % 60); // % 60 - хвост от деления, кот отображается в виде уменьшающихся цифр на сайте
+
+    var minutes = Math.floor(t / 1000 / 60 % 60);
+    var hours = Math.floor(t / (1000 * 60 * 60) % 24);
+    var days = Math.floor(t / (1000 * 60 * 60 * 24));
+    return {
+      'total': t,
+      'days': days,
+      'hours': hours,
+      'minutes': minutes,
+      'seconds': seconds
+    };
+  }; //  помещаем 'живые' цифры в определенное место верстки (страницы)
+
+
+  var setClock = function setClock(selector, endTime) {
+    // selector - место в HTML
+    var timer = document.querySelector(selector);
+    var days = timer.querySelector('#days');
+    var hours = timer.querySelector('#hours');
+    var minutes = timer.querySelector('#minutes');
+    var seconds = timer.querySelector('#seconds');
+    var timeInterval = setInterval(updateClock, 1000);
+    updateClock(); // вызываем единожды вручную, чтобы на странице не отображалась статическая верстка (т.к стр45 запустится только через 1с)
+    // помещаем эту функцию внутрь, т.к. нужен доступ к переменной timeInterval, чтобы остановить таймер и остальным переменным
+
+    function updateClock() {
+      var t = getTimeRemaining(endTime);
+      days.textContent = addZero(t.days);
+      hours.textContent = addZero(t.hours);
+      minutes.textContent = addZero(t.minutes);
+      seconds.textContent = addZero(t.seconds);
+
+      if (t.total <= 0) {
+        days.textContent = '00';
+        hours.textContent = '00';
+        minutes.textContent = '00';
+        seconds.textContent = '00';
+        clearInterval(timeInterval);
+      }
+    }
+  };
+
+  setClock(id, deadline);
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (timer);
 
 /***/ }),
 

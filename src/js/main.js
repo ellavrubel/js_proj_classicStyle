@@ -4,7 +4,7 @@ import modals from './modules/modals';
 import tabs from './modules/tabs';
 import forms from './modules/forms';
 import changeModalState from './modules/changeModalState';
-
+import timer from "./modules/timer";
 
 
 
@@ -14,6 +14,7 @@ window.addEventListener('DOMContentLoaded', () => {   // скрипты выпо
 
     // создание объекта, в кот помещаются все данные из калькулятора
     let modalState = {};
+    let deadline = '2021-1-4';
 
     // вызов импортируемых функций
     changeModalState(modalState);
@@ -25,5 +26,7 @@ window.addEventListener('DOMContentLoaded', () => {   // скрипты выпо
     tabs('.balcon_icons', '.balcon_icons_img', '.big_img > img', 'do_image_more', 'inline-block');
 
     forms(modalState);
+
+    timer('#timer', deadline);
 
 });
