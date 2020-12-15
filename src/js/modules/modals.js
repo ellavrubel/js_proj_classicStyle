@@ -9,8 +9,7 @@ const modals = () => {
         const modal = document.querySelector(modalSelector);
         const close = document.querySelector(closeSelector);
         const openWindows = document.querySelectorAll('[data-modal]');
-
-
+        const scroll = smoothModalSwitcher();
 
 
         trigger.forEach(item => {  // forEach возможен только при querySelectorAll и на каждый элемент массива с одинаковыми классами будет навешан обработ событий
@@ -28,6 +27,7 @@ const modals = () => {
                 modal.style.display = 'block';
                 document.body.style.overflow = 'hidden'; // при открытом модальном окне страница сайта будет замораживаться
                 // document.body.classList.add('modal-open'); // т.к. в проекте есть Bootstrap
+                document.body.style.marginRight = `${scroll}px`;
             });
 
         });
@@ -42,6 +42,7 @@ const modals = () => {
             modal.style.display = 'none';
             document.body.style.overflow = '';
             // document.body.classList.remove('modal-open');
+            document.body.style.marginRight = '0px';
 
         });
 
@@ -57,12 +58,13 @@ const modals = () => {
                 modal.style.display = 'none';
                 document.body.style.overflow = '';
                 // document.body.classList.remove('modal-open');
+                document.body.style.marginRight = '0px';
             }
 
-        })
-
+        });
     }
-    
+
+
 
     function showModalByTime (selector, time){
         setTimeout(() => {
@@ -71,6 +73,22 @@ const modals = () => {
             document.body.style.overflow = 'hidden';
 
         }, time)
+    }
+
+    function smoothModalSwitcher(){
+        let div = document.createElement('div');
+
+        div.style.width = '50px';
+        div.style.height = '50px';
+        div.style.overflowY = 'scroll';
+        div.style.visibility = 'hidden';
+
+        document.body.appendChild(div);
+
+        let scrollWidth = div.offsetWidth - div.clientWidth; // динамически получаем ширину скрола
+        div.remove();  //
+
+        return scrollWidth;
     }
 
 
